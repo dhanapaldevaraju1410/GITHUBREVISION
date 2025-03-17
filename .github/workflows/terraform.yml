@@ -22,5 +22,8 @@ jobs:
     - name: Check Terraform format
       run: terraform fmt -check
 
+    - name: Set output
+      run: echo "formatted=true" >> $GITHUB_OUTPUT
+
     - name: Terraform Plan
       run: terraform plan
