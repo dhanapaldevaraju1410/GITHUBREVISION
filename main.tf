@@ -1,6 +1,7 @@
 provider "google" {
   project = "natural-region-452705-m6"
   region  = "us-central1"
+  credentials = file(".\credentials.json")
 }
 
 resource "google_compute_instance" "default" {
