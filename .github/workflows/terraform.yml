@@ -1,40 +1,36 @@
-name: Terraform
+name: Deploy to GCP
 
 on:
   push:
     branches:
       - main
 
-env:
-  GLOBAL_VAR: 'GlobalValue'
-
 jobs:
-  terraform:
+  deploy:
     runs-on: ubuntu-latest
-    env:
-      JOB_VAR: 'JobSpecificValue'
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-    - name: Setup Terraform
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        version: 'latest'
+        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+        export_default_credentials: true
+        scopes: https://www.googleapis.com/auth/cloud-platform
+
+    - name: Install Terraform
       uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.5.7
 
-    - name: Terraform Init
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+    - name: Initialize Terraform
       run: terraform init
 
-    - name: Check Terraform format
+    - name: Apply Terraform
+      run: terraform apply -auto-approve
       env:
-        STEP_VAR: 'StepSpecificValue'
-      run: echo $STEP_VAR
-
-    - name: Set output
-      run: echo "channel=$(echo $CHANNEL)" >> $GITHUB_OUTPUT
-
-    - name: Terraform Plan
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-      run: terraform plan -var "google_credentials=${{ secrets.GOOGLE_CREDENTIALS }}"
+        GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
