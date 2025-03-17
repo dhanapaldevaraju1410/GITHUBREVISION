@@ -35,9 +35,3 @@ jobs:
         GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
         TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
 
-    - name: Destroy Terraform resources
-      if: github.event.inputs.destroy == 'true'
-      run: terraform destroy -auto-approve
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-        TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
