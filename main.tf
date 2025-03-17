@@ -1,7 +1,11 @@
 provider "google" {
-  project = "natural-region-452705-m6"
-  region  = "us-central1"
-  credentials = file("./credentials.json")
+  project     = "your-project-id"
+  region      = "us-central1"
+  credentials = var.google_credentials
+}
+
+variable "google_credentials" {
+  type = string
 }
 
 resource "google_compute_instance" "default" {
